@@ -328,7 +328,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var root = Polymer.Path.root(path);
       // Call extension point for Templatizer sub-classes
       dataHost._forwardInstancePath.call(dataHost, this, path, value);
-      if (root in dataHost._parentProps) {
+      if (dataHost._parentProps && root in dataHost._parentProps) {
         dataHost._templatized._notifyPath(dataHost._parentPropPrefix + path, value);
       }
     },
