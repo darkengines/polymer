@@ -65,7 +65,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'use strict';
 
         var Path = Polymer.Path;
-
+        var notifiedBoundPaths = [];
         Polymer.Base._addFeature({
             /**
              * Notify that a path has changed.
@@ -370,9 +370,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 for (var a in this._boundPaths) {
                     var b = this._boundPaths[a];
                     if (Path.isDescendant(a, path)) {
-                        this._notifyPath(Path.translate(a, b, path), value);
+                        if (!notifiedBoundPaths.find(function (notifiedBoundPath) { return notifiedBoundPath === a })) {
+                            notifiedBoundPaths.push(a);
+                            this._notifyPath(Path.translate(a, b, path), value);
+                            notifiedBoundPaths.pop();
+                        }
                     } else if (Path.isDescendant(b, path)) {
-                        this._notifyPath(Path.translate(b, a, path), value);
+                        if (!notifiedBoundPaths.find(function (notifiedBoundPath) { return notifiedBoundPath === b })) {
+                            notifiedBoundPaths.push(b);
+                            this._notifyPath(Path.translate(b, a, path), value);
+                            notifiedBoundPaths.pop();
+                        }
                     }
                 }
             },
